@@ -3,10 +3,12 @@ package com.orderservice.orderservice.service;
 import com.orderservice.orderservice.dto.InventoryResponse;
 import com.orderservice.orderservice.dto.OrderLineItemsDto;
 import com.orderservice.orderservice.dto.OrderRequest;
+import com.orderservice.orderservice.event.OrderPlacedEvent;
 import com.orderservice.orderservice.model.Order;
 import com.orderservice.orderservice.model.OrderLineItems;
 import com.orderservice.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,7 +23,8 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public void placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -38,8 +41,8 @@ public class OrderService {
                 .map(OrderLineItems::getSkuCode)
                 .toList();
 
-        InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        InventoryResponse[] inventoryResponseArray = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
@@ -49,6 +52,8 @@ public class OrderService {
                 .allMatch(InventoryResponse::isInStock);
         if(allProductsInStock){
             orderRepository.save(order);
+
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
         }
         else {
             throw new IllegalArgumentException("Product is not in stock, please try again later");
