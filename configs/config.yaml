@@ -1,0 +1,7 @@
+mongo:
+  uri: "mongodb://localhost:27017"
+  database: "product-service"
+mysql:
+  uri: "root:965519@tcp(localhost:3306)/order-service"
+server:
+  port: 8080
