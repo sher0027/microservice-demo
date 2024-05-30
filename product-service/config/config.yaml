@@ -1,5 +1,8 @@
 mongo:
   uri: "mongodb://localhost:27017"
   database: "product-service"
-server:
-  port: 8080
+service:
+  name: "product"
+  port: 8081
+registry:
+  url: "http://localhost:8761/register"

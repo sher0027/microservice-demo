@@ -3,5 +3,8 @@ mysql:
 kafka:
   brokers:
     - "localhost:9092"
-server:
-  port: 8081
+service:
+  name: "order-service"
+  port: 8082
+registry:
+  url: "http://localhost:8761/register"

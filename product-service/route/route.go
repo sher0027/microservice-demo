@@ -1,4 +1,4 @@
-package routes
+package route
 
 import (
 	"product-service/controller"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(router *gin.Engine,  productController *controller.ProductController) {
+func SetupRouter(router *gin.Engine, productController *controller.ProductController) {
 	api := router.Group("/api")
 	{
 		api.POST("/product", productController.CreateProduct)
