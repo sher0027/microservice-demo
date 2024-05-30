@@ -5,5 +5,5 @@ type OrderLineItems struct {
 	SkuCode  string
 	Price    float64
 	Quantity int
-	OrderId  uint`gorm:"column:order_id;not null"`
+	OrderId  uint `gorm:"column:order_id;not null"`
 }

@@ -1,4 +1,7 @@
 mysql:
   uri: "root:965519@tcp(localhost:3306)/order-service"
+kafka:
+  brokers:
+    - "localhost:9092"
 server:
   port: 8081

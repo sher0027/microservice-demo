@@ -9,6 +9,9 @@ type Config struct {
     MySQL struct {
         URI string `yaml:"uri"`
     } `yaml:"mysql"`
+    Kafka struct {
+        Brokers []string `yaml:"brokers"`
+    } `yaml:"kafka"`
     Server struct {
         Port int `yaml:"port"`
     } `yaml:"server"`

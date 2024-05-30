@@ -1,27 +1,33 @@
 package service
 
 import (
-	"log"
+	"encoding/json"
 	"errors"
+	"log"
+	"net/http"
 	"strings"
+
 	"order-service/dto"
+	"order-service/event"
 	"order-service/model"
 	"order-service/repository"
-	"net/http"
 
+	"github.com/IBM/sarama"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
 )
 
 type OrderService struct {
-	OrderRepo *repository.OrderRepository
-	Client    *resty.Client
+	OrderRepo     *repository.OrderRepository
+	Client        *resty.Client
+	KafkaProducer sarama.AsyncProducer
 }
 
-func NewOrderService(orderRepo *repository.OrderRepository, client *resty.Client) *OrderService {
+func NewOrderService(orderRepo *repository.OrderRepository, client *resty.Client, kafkaProducer sarama.AsyncProducer) *OrderService {
 	return &OrderService{
-		OrderRepo: orderRepo,
-		Client:    client,
+		OrderRepo:     orderRepo,
+		Client:        client,
+		KafkaProducer: kafkaProducer,
 	}
 }
 
@@ -30,28 +36,29 @@ func (service *OrderService) PlaceOrder(orderRequest *dto.OrderRequest) error {
 	order := model.Order{
 		OrderNumber: uuid.New().String(),
 	}
+	log.Printf("Generated Order Number: %s", order.OrderNumber)
+	log.Printf("OrderRequest: %+v", orderRequest)
 
-	for _, item := range orderRequest.OrderLineItems {
-		orderLineItem := model.OrderLineItems{
-			SkuCode:  item.SkuCode,
-			Price:    item.Price,
-			Quantity: item.Quantity,
-			OrderId:  order.Id,
-		}
-		order.OrderLineItems = append(order.OrderLineItems, orderLineItem)
-	}
-	log.Printf("Order Line Items: %+v", order.OrderLineItems)
-
-	if len(order.OrderLineItems) == 0 {
+	if len(orderRequest.OrderLineItems) == 0 {
 		log.Println("No order line items found")
 		return errors.New("no order line items found")
 	}
 
-	skuCodes := make([]string, len(order.OrderLineItems))
-	for i, item := range order.OrderLineItems {
+	var orderLineItems []model.OrderLineItems
+	skuCodes := make([]string, len(orderRequest.OrderLineItems))
+	for i, item := range orderRequest.OrderLineItems {
+		orderLineItem := model.OrderLineItems{
+			SkuCode:  item.SkuCode,
+			Price:    item.Price,
+			Quantity: item.Quantity,
+		}
+		orderLineItems = append(orderLineItems, orderLineItem)
 		skuCodes[i] = item.SkuCode
 	}
+	log.Printf("SKU Codes: %v", skuCodes)
+
 	skuCodesParam := strings.Join(skuCodes, ",")
+	log.Printf("SKU Codes Param: %s", skuCodesParam)
 
 	var inventoryResponse []dto.InventoryResponse
 	resp, err := service.Client.R().
@@ -85,11 +92,28 @@ func (service *OrderService) PlaceOrder(orderRequest *dto.OrderRequest) error {
 		return errors.New("product is not in stock, please try again later")
 	}
 
-	if err := service.OrderRepo.Save(&order); err != nil {
-		log.Printf("Error saving order: %v", err)
+	if err := service.OrderRepo.SaveOrderWithItems(&order, orderLineItems); err != nil {
+		log.Printf("Error saving order with items: %v", err)
 		return err
 	}
 
-	log.Println("Order placed successfully")
+	orderPlacedEvent := event.OrderPlacedEvent{
+		OrderNumber: order.OrderNumber,
+	}
+
+	eventMessage, err := json.Marshal(orderPlacedEvent)
+	if err != nil {
+		log.Printf("Error marshalling order placed event: %v", err)
+		return err
+	}
+
+	msg := &sarama.ProducerMessage{
+		Topic: "notificationTopic",
+		Value: sarama.StringEncoder(eventMessage),
+	}
+
+	service.KafkaProducer.Input() <- msg
+
+	log.Println("Order placed successfully and Kafka message sent")
 	return nil
 }
