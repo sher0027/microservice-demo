@@ -21,4 +21,8 @@ public class OrderLineItems {
     private String skuCode;
     private BigDecimal price;
     private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 }
