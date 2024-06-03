@@ -63,7 +63,7 @@ func proxyRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	defer serviceResp.Body.Close()
 
-	if serviceResp.StatusCode != http.StatusOK {
+	if serviceResp.StatusCode != http.StatusOK && serviceResp.StatusCode != http.StatusCreated {
 		log.Printf("Service %s responded with status code: %d", serviceName, serviceResp.StatusCode)
 		http.Error(w, "service response error", serviceResp.StatusCode)
 		return
