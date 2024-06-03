@@ -4,17 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"notification-service/config"
+	"notification-service/event"
 	"os"
 	"os/signal"
 	"syscall"
-	"notification-service/config"
 
 	"github.com/IBM/sarama"
 )
-
-type OrderPlacedEvent struct {
-	OrderNumber string `json:"orderNumber"`
-}
 
 func main() {
 	// Load configuration
@@ -64,19 +61,23 @@ func initKafkaConsumer(brokers []string, group string) (sarama.ConsumerGroup, er
 	return consumerGroup, nil
 }
 
+// Consumer represents a Sarama consumer group consumer
 type Consumer struct{}
 
+// Setup is run at the beginning of a new session, before ConsumeClaim.
 func (consumer *Consumer) Setup(sarama.ConsumerGroupSession) error {
 	return nil
 }
 
+// Cleanup is run at the end of a session, once all ConsumeClaim goroutines have exited.
 func (consumer *Consumer) Cleanup(sarama.ConsumerGroupSession) error {
 	return nil
 }
 
+// ConsumeClaim must start a consumer loop of ConsumerGroupClaim's Messages().
 func (consumer *Consumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for message := range claim.Messages() {
-		var event OrderPlacedEvent
+		var event event.OrderPlacedEvent
 		if err := json.Unmarshal(message.Value, &event); err != nil {
 			log.Printf("Error unmarshalling message: %v", err)
 			continue

@@ -1,0 +1,50 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/order                --> order-service/controller.(*OrderController).PlaceOrder-fm (3 handlers)
+2024/06/03 12:29:15 Order Service running on port 8082
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8082
+2024/06/03 12:29:20 Received OrderRequest: {OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:20 Starting PlaceOrder process
+2024/06/03 12:29:20 Generated Order Number: 87e0b360-c129-4a48-a853-794f5c1e4a1a
+2024/06/03 12:29:20 OrderRequest: &{OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:20 SKU Codes: [iphone_12]
+2024/06/03 12:29:20 SKU Codes Param: iphone_12
+2024/06/03 12:29:20 Inventory Response: [{SkuCode:iphone_12 IsInStock:true}]
+2024/06/03 12:29:20 Saving order: &{Id:0 OrderNumber:87e0b360-c129-4a48-a853-794f5c1e4a1a OrderLineItems:[]}
+2024/06/03 12:29:20 Saving order line item: {Id:0 SkuCode:iphone_12 Price:1200 Quantity:7 OrderId:22}
+2024/06/03 12:29:20 Order and items saved successfully
+2024/06/03 12:29:20 Order placed successfully and Kafka message sent
+[GIN] 2024/06/03 - 12:29:20 | 201 |     10.7595ms |             ::1 | POST     "/api/order"
+2024/06/03 12:29:20 Message produced successfully: &{notificationTopic 87e0b360-c129-4a48-a853-794f5c1e4a1a {"orderNumber":"87e0b360-c129-4a48-a853-794f5c1e4a1a"} [] <nil> 0 1 0001-01-01 00:00:00 +0000 UTC 0 0 <nil> 0 0 false}
+2024/06/03 12:29:33 Received OrderRequest: {OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:33 Starting PlaceOrder process
+2024/06/03 12:29:33 Generated Order Number: 763eb3fb-31e9-4421-95b6-c152966ed662
+2024/06/03 12:29:33 OrderRequest: &{OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:33 SKU Codes: [iphone_12]
+2024/06/03 12:29:33 SKU Codes Param: iphone_12
+2024/06/03 12:29:33 Inventory Response: [{SkuCode:iphone_12 IsInStock:true}]
+2024/06/03 12:29:33 Saving order: &{Id:0 OrderNumber:763eb3fb-31e9-4421-95b6-c152966ed662 OrderLineItems:[]}
+2024/06/03 12:29:33 Saving order line item: {Id:0 SkuCode:iphone_12 Price:1200 Quantity:7 OrderId:23}
+2024/06/03 12:29:33 Order and items saved successfully
+2024/06/03 12:29:33 Order placed successfully and Kafka message sent
+[GIN] 2024/06/03 - 12:29:33 | 201 |      6.5506ms |             ::1 | POST     "/api/order"
+2024/06/03 12:29:33 Message produced successfully: &{notificationTopic 763eb3fb-31e9-4421-95b6-c152966ed662 {"orderNumber":"763eb3fb-31e9-4421-95b6-c152966ed662"} [] <nil> 4 2 0001-01-01 00:00:00 +0000 UTC 0 0 <nil> 0 0 false}
+2024/06/03 12:29:39 Received OrderRequest: {OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:39 Starting PlaceOrder process
+2024/06/03 12:29:39 Generated Order Number: 5a3f6c2a-ed5d-4a7d-9526-48d25b77877e
+2024/06/03 12:29:39 OrderRequest: &{OrderLineItems:[{SkuCode:iphone_12 Price:1200 Quantity:7}]}
+2024/06/03 12:29:39 SKU Codes: [iphone_12]
+2024/06/03 12:29:39 SKU Codes Param: iphone_12
+2024/06/03 12:29:39 Inventory Response: [{SkuCode:iphone_12 IsInStock:true}]
+2024/06/03 12:29:39 Saving order: &{Id:0 OrderNumber:5a3f6c2a-ed5d-4a7d-9526-48d25b77877e OrderLineItems:[]}
+2024/06/03 12:29:39 Saving order line item: {Id:0 SkuCode:iphone_12 Price:1200 Quantity:7 OrderId:24}
+2024/06/03 12:29:39 Order and items saved successfully
+2024/06/03 12:29:39 Order placed successfully and Kafka message sent
+[GIN] 2024/06/03 - 12:29:39 | 201 |      6.8757ms |             ::1 | POST     "/api/order"
+2024/06/03 12:29:39 Message produced successfully: &{notificationTopic 5a3f6c2a-ed5d-4a7d-9526-48d25b77877e {"orderNumber":"5a3f6c2a-ed5d-4a7d-9526-48d25b77877e"} [] <nil> 24 0 0001-01-01 00:00:00 +0000 UTC 0 0 <nil> 0 0 false}

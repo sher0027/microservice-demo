@@ -1,0 +1,13 @@
+2024/06/03 12:29:14 API Gateway is running on port 8080
+2024/06/03 12:29:19 Received request for service: order
+2024/06/03 12:29:19 Service address for order: localhost:8082
+2024/06/03 12:29:19 Forwarding request to: http://localhost:8082/api/order
+2024/06/03 12:29:20 Service order responded with status code: 201
+2024/06/03 12:29:33 Received request for service: order
+2024/06/03 12:29:33 Service address for order: localhost:8082
+2024/06/03 12:29:33 Forwarding request to: http://localhost:8082/api/order
+2024/06/03 12:29:33 Service order responded with status code: 201
+2024/06/03 12:29:39 Received request for service: order
+2024/06/03 12:29:39 Service address for order: localhost:8082
+2024/06/03 12:29:39 Forwarding request to: http://localhost:8082/api/order
+2024/06/03 12:29:39 Service order responded with status code: 201

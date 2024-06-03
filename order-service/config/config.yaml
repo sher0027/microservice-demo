@@ -4,7 +4,7 @@ kafka:
   brokers:
     - "localhost:9092"
 service:
-  name: "order-service"
+  name: "order"
   port: 8082
 registry:
   url: "http://localhost:8761/register"

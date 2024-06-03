@@ -1,0 +1,6 @@
+2024/06/03 12:29:13 Service Registry is running on port 8761
+2024/06/03 12:29:15 Registered service: product at localhost:8081
+2024/06/03 12:29:15 Registered service: order at localhost:8082
+2024/06/03 12:29:19 Service found: order at localhost:8082
+2024/06/03 12:29:33 Service found: order at localhost:8082
+2024/06/03 12:29:39 Service found: order at localhost:8082

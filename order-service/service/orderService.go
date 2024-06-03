@@ -66,7 +66,7 @@ func (service *OrderService) PlaceOrder(orderRequest *dto.OrderRequest) error {
 			"skuCode": skuCodesParam,
 		}).
 		SetResult(&inventoryResponse).
-		Get("http://localhost:8082/api/inventory")
+		Get("http://localhost:8083/api/inventory")
 
 	if err != nil {
 		log.Printf("Error making inventory check request: %v", err)
@@ -109,6 +109,7 @@ func (service *OrderService) PlaceOrder(orderRequest *dto.OrderRequest) error {
 
 	msg := &sarama.ProducerMessage{
 		Topic: "notificationTopic",
+		Key:   sarama.StringEncoder(order.OrderNumber), // 使用订单号作为分区键
 		Value: sarama.StringEncoder(eventMessage),
 	}
 
