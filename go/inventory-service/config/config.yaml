@@ -1,0 +1,4 @@
+mysql:
+  uri: "root:965519@tcp(localhost:3306)/inventory-service"
+server:
+  port: 8083

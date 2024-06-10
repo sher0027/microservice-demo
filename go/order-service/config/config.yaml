@@ -1,0 +1,10 @@
+mysql:
+  uri: "root:965519@tcp(localhost:3306)/order-service"
+kafka:
+  brokers:
+    - "localhost:9092"
+service:
+  name: "order"
+  port: 8082
+registry:
+  url: "http://localhost:8761/register"
